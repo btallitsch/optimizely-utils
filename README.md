@@ -1,0 +1,1 @@
+Some basic script within Angular to interact with Optimizely for AB testing

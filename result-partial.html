@@ -1,0 +1,56 @@
+<div expand-attributes="class|id|lang\type-{{result.contenttypeLower}} subtype-{{result.subtype}}|result-{{ $index }}|{{ result.langAttribute }}">
+	<p class="multiselect-input custom-input">
+		<button class="icon c-link c-link--graphical" ng-class="{'icon-checkbox': !result.selected, 'icon-checkbox-checked': result.selected}" ng-click="context.updateMultiselect($index)">&nbsp;
+			<span class="visuallyhidden" ng-if="!result.selected" data-once-text="Messages.search_select_result"></span>
+			<span class="visuallyhidden" ng-if="result.selected" data-once-text="Messages.search_deselect_result"></span>
+			<span class="visuallyhidden" data-once-text="$index"></span>
+		</button>
+	</p>
+
+	<p ng-if="!result.moresections" class="content-type" data-once-text="result.contenttypeDisplay"></p>
+	<p ng-if="result.moresections > 0" class="content-type" data-once-text="Messages.search_chapter_excerpt"></p>
+
+	<div data-ck-result-partial-image-or-video></div>
+
+	<h2>
+		<span ng-show="result.hasOwnProperty('entitled') && !result.entitled" class="icon icon-padlock padlock">&nbsp;</span>
+		<span data-ck-result-partial-main-link="result" data-index-override="SearchResultsCtrl.extraParams.indexOverride" ng-init="index = $index"></span>
+	</h2>
+
+	<p ng-if="result.subtype === 'section'" class="result__breadcrumb" data-ck-result-partial-section-breadcrumb="result" data-index-override="SearchResultsCtrl.extraParams.indexOverride" data-ck-truncate-breadcrumbs></p>
+
+	<p ng-if="result.statustype && (result.statustype === 'S5' || result.statustype === 'S100' || result.statustype === 'S200')" class="article-in-press">
+		<span data-once-text="Messages.shared_aip_label"></span>: <span data-once-text="result.statusmessage"></span>
+	</p>
+
+	<p ng-if="result.embargo" class="embargo">
+		<span data-once-text="Messages.shared_twelve_month_embargo"></span>
+	</p>
+
+	<div data-ck-result-partial-summary="result"></div>
+
+	<p class="source primary-source" data-index-override="SearchResultsCtrl.extraParams.indexOverride" data-ck-result-partial-source-link="result"></p>
+
+	<!-- Only display if we are viewing Theriaque drugs -->
+	<p ng-if="result.cid === SearchResultsCtrl.THERIAQUE_DRUG_CID" class="source expandy-list drug-tradenames" expandy-collapse ng-bind-html="result.tradenames"></p>
+
+	<div data-ck-result-partial-footer></div>
+
+	<div ck-search-toolbar-v2="result"></div>
+
+	<div ng-if="result.moresections > 0">
+		<a ng-href="#!/search/{{SearchResultsCtrl.searchTerm}}/%7B%22facetquery%22:%5B%22contenttype:BK%22%5D,%22filterquery%22:%5B%22eid:{{result.eid}}%22%5D%7D?group=false"><span data-once-text="Messages.search_result_more_results_see_text"></span>  <span data-once-text="Messages.search_result_more_results_text"></span></a>
+	</div>
+
+	<div ng-if="context.tags">
+		<ul class="o-nav-list result-tag-list">
+			<li class="o-nav-list__item" ng-repeat="tag in context.savedTags track by tag.name" ng-if="context.checkTag(result, tag)">
+				<button class="c-tag c-tag__left-only" ng-class="{'active': tag.active}" ng-click="context.tags.selectUnselectTag($index)" ng-bind="tag.name"></button><!-- Do not insert space between buttons --><button class="c-tag c-tag__right-only" ng-class="{'active': tag.active}" ck-tooltip="Messages.saved_content_remove_tag" ng-click="context.tags.deleteContentTag(result, tag)" stop-propagation="click">
+					<span class="icon icon-cross-small c-tag__remove-icon">&nbsp;</span>
+				</button>
+				<span ng-if="tag.isNew" class="new" data-once-text="Messages.saved_content_new"></span>
+			</li>
+		</ul>
+		<p class="result-tag-list-link"><button class="c-link c-link--multi-part" ng-click="context.tags.editItemTags(result)">+ <span class="c-link__content" data-once-text="Messages.saved_content_add_edit_tags"></span></button></p>
+	</div>
+</div>
